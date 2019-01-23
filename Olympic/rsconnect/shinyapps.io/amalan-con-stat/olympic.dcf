@@ -1,0 +1,10 @@
+name: olympic
+title:
+username:
+account: amalan-con-stat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 660825
+bundleId: 1831682
+url: https://amalan-con-stat.shinyapps.io/olympic/
+when: 1548250359.91589
