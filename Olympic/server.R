@@ -20,7 +20,7 @@ function(input, output){
     
                               Medal_color<-c("#CD7F32","#FFD700","#C0C0C0")
                               names(Medal_color)<-levels(factor(Medal))
-                              colScale<-scale_color_manual(name="Medal",values=Medal_color,na.value="red")
+                              McolScale<-scale_color_manual(name="Medal",values=Medal_color,na.value="red")
                               
                               if(input$NoNA == FALSE)
                               {
@@ -28,7 +28,7 @@ function(input, output){
                               ggplot(.,aes(x=Season,y=Sex,color=factor(Medal)))+
                               geom_jitter()+facet_wrap(~factor(Year))+
                               xlab("Years of Participation")+
-                              ylab("Medals")+ colScale
+                              ylab("Gender")+ McolScale
                               }
                               else
                               {
@@ -36,17 +36,17 @@ function(input, output){
                               ggplot(.,aes(x=Season,y=Sex,color=factor(Medal)))+
                               geom_jitter()+facet_wrap(~factor(Year))+
                               xlab("Years of Participation")+
-                              ylab("Medals")+
-                              colScale
+                              ylab("Gender")+
+                              McolScale
                               }
                                },height = 1000,width = 1200)  
                               
   # creating the table
   output$table<-DT::renderDataTable({
-                                datatable(subset(Olympic,NOC==input$NOC, 
-                                                 select = -c(Height,Weight,Team,NOC,Games)),
-                                          options = list(pageLength= 25))
-                               })
+                                   datatable(subset(Olympic,NOC==input$NOC, 
+                                                    select = -c(Height,Weight,Team,NOC,Games)),
+                                             options = list(pageLength= 25))
+                                   })
   # creating the summary for selected variables
   output$summary<-renderUI({
                             print(dfSummary(subset(Olympic,NOC==input$NOC, 
@@ -55,6 +55,39 @@ function(input, output){
                           })
   # NOC and codes for data
   output$data<-DT::renderDataTable({
-                                datatable(NOC,options = list(pageLength = 25))
-                              })
+                                  datatable(NOC,options = list(pageLength = 25))
+                                  })
+  # Gender Count over the year
+  output$barplot <- renderPlot({
+                              Gender_color<-c("#DEA1C0","#6BA5DE")
+                              names(Gender_color)<-levels(factor(Sex))
+                              GcolScale<-scale_color_manual(name="Sex",values=Gender_color)
+                              
+                              subset(Olympic,NOC==input$NOC,select = c(Sex,Year,Season)) %>%
+                              ggplot(.,aes(x=factor(Year),fill=factor(Sex),group=factor(Sex)))+
+                              geom_bar(position = "dodge")+
+                              xlab("Years")+ylab("Frequency")+coord_flip()+ GcolScale+
+                              labs(fill="Gender")+
+                              geom_text(stat='count',aes(y=..count..,label=..count..),
+                                        position=position_dodge(width = 1),hjust=1,
+                                        color="#696969",size=4)
+                              },height = 1200,width = 1200)
+  # Gender Count for Events
+  output$SportsBarplot<-renderPlot({
+                                    Gender_color<-c("#DEA1C0","#6BA5DE")
+                                    names(Gender_color)<-levels(factor(Sex))
+                                    GcolScale<-scale_color_manual(name="Sex",values=Gender_color)
+                                    
+                                    subset(Olympic,NOC==input$NOC,select = c(Sex,Sport,Season)) %>%
+                                    ggplot(.,aes(x=fct_infreq(factor(Sport)),fill=factor(Sex),
+                                                 group=factor(Sex)))+
+                                    geom_bar(position = "dodge")+
+                                    xlab("Sport")+ylab("Frequency")+coord_flip()+
+                                    labs(fill="Gender")+GcolScale+
+                                    geom_text(stat='count',aes(y=..count..,label=..count..),
+                                              position=position_dodge(width = 1),hjust=1,
+                                              color="#696969",size=3)
+     
+                                  },height = 1200,width = 1200)
+  
                         }
