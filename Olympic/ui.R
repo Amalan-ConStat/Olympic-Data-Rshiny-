@@ -1,12 +1,12 @@
 library(shinythemes)
-
+library(shinybusy)
 
 # load the data
 load("Data/data.RData")
 
 # starting the rshiny ui
 fluidPage(theme = shinytheme("flatly"),
-  
+          add_busy_spinner(spin = "fading-circle"),
           # Application title
           titlePanel("OLYMPIC DATA FROM KAGGLE : AN RSHINY PERSPECTIVE",windowTitle = "Olympic : Rshiny"),
   
