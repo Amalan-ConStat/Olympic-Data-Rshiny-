@@ -5,6 +5,6 @@ account: amalan-con-stat
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 660825
-bundleId: 1859197
+bundleId: 1912220
 url: https://amalan-con-stat.shinyapps.io/olympic/
-when: 1549448902.15906
+when: 1551627232.72585
