@@ -9,7 +9,8 @@ fluidPage(theme = shinytheme("flatly"),
           add_busy_spinner(spin = "fading-circle"),
           # Application title
           titlePanel("OLYMPIC DATA FROM KAGGLE : AN RSHINY PERSPECTIVE",windowTitle = "Olympic : Rshiny"),
-  
+          tags$style(type="text/css", css),
+          tags$head(tags$style(".shiny-output-error{color: blue;}")),
           # sidebar which incldues the image and title, information
           sidebarLayout(
                         sidebarPanel(

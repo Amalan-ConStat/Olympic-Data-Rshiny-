@@ -7,10 +7,18 @@ library(tidyverse)
 library(htmlTable)
 library(htmlwidgets)
 
+css <- "
+.shiny-output-error { visibility: hidden; }
+.shiny-output-error:before {
+  visibility: visible;
+  content: 'The Country you have chosen has not won any medals.'; }
+}
+"
+
 # load the data
 load("Data/data.RData")
 
-function(input, output){
+function(input, output,session){
     # NOC and codes for data
     output$data<-DT::renderDataTable({
                                       datatable(NOC,options = list(pageLength = 30))
@@ -34,12 +42,14 @@ function(input, output){
                               }
                               else
                               {
-                              subset(Olympic[!is.na(Olympic$Medal),],NOC==input$NOC) %>%
-                              ggplot(.,aes(x=Season,y=Sex,color=factor(Medal)))+
-                              geom_jitter()+facet_wrap(~factor(Year),ncol=4)+
-                              xlab("Years of Participation")+
-                              ylab("Gender")+McolScale+
-                              ggtitle("MEDALS WON OVER THE YEARS ACCORDING TO GENDER")
+                              p<-subset(Olympic[!is.na(Olympic$Medal),],NOC==input$NOC) %>%
+                                 ggplot(.,aes(x=Season,y=Sex,color=factor(Medal)))+
+                                 geom_jitter()+facet_wrap(~factor(Year),ncol=4)+
+                                 xlab("Years of Participation")+
+                                 ylab("Gender")+McolScale+
+                                 ggtitle("MEDALS WON OVER THE YEARS ACCORDING TO GENDER")
+                              
+                              print(p)
                               }
                                },height = 1400,width = 1200)  
                               
@@ -102,5 +112,5 @@ function(input, output){
                                labs(color="Gender")+xlab("Weight (kg)")+ylab("Height (cm)")+
                                facet_wrap(~Sport,ncol = 4)+GcolScale
                              },height = 1400,width = 1200)
-  
+  session$onSessionEnded(stopApp)
                         }
